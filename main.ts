@@ -1,32 +1,31 @@
-import * as fs from "node:fs";
-import * as path from "node:path";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
-// One line for the house judge: a small good thing from today, told
-// with a concrete detail and a turn at the end. The night guard
-// remembers everything about the narrator — name, floor, coffee
-// without sugar — and then, unasked, hands over a cup at 3 a.m.
-// Warmth first, surprise last, no greeting-card phrasing.
-const ENTRY =
-  "The night guard remembered my name, my floor, and that I take my coffee without sugar \u2014 then handed me a cup at 3 a.m. without me asking.";
+// A small good thing from today, for the house judge: the lift
+// arrives before I call it, and the old man inside has been
+// listening for my footsteps. Warmth, one concrete sound, and a
+// turn at the end — no greeting-card phrasing.
+const LINE =
+  "This morning the lift stopped at my floor before I pressed the button, and the old man inside just grinned: 'I heard your footsteps coming.'";
 
-const MIN_CHARS = 1;
-const MAX_CHARS = 200;
-
-const length = [...ENTRY].length;
-const hasWords = ENTRY.trim().length > 0;
-if (length < MIN_CHARS || length > MAX_CHARS || !hasWords) {
-  throw new Error(
-    `entry is ${length} characters, but the gate wants ${MIN_CHARS}-${MAX_CHARS} non-blank characters`,
-  );
+function checkLine(line: string): void {
+  const chars = [...line];
+  if (chars.length < 1 || chars.length > 200) {
+    throw new Error(`line is ${chars.length} characters, gate wants 1-200`);
+  }
+  if (line.trim() !== line || line.trim().length === 0) {
+    throw new Error("line must be non-blank with no surrounding whitespace");
+  }
 }
 
-const destination = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
-fs.mkdirSync(destination, { recursive: true });
-const entryPath = path.join(destination, "entry.txt");
-fs.writeFileSync(entryPath, ENTRY, "utf8");
+checkLine(LINE);
 
-// Read it back: the file the judge sees must be exactly this line.
-const written = fs.readFileSync(entryPath, "utf8");
-if (written !== ENTRY) {
-  throw new Error("entry.txt round-trip mismatch");
+const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+mkdirSync(outDir, { recursive: true });
+const outPath = join(outDir, "entry.txt");
+writeFileSync(outPath, LINE, "utf8");
+const back = readFileSync(outPath, "utf8");
+if (back !== LINE) {
+  throw new Error("entry.txt does not hold exactly the line");
 }
+console.log(`wrote ${[...LINE].length} characters to ${outPath}`);

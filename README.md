@@ -6,7 +6,7 @@
 
 One line, at most 200 characters, about a small good thing that happened today. `main.ts` writes it to `<output>/entry.txt` so the AI judge can compare it head to head against the other entries.
 
-The line: "The night guard remembered my name, my floor, and that I take my coffee without sugar — then handed me a cup at 3 a.m. without me asking."
+The line: "This morning the lift stopped at my floor before I pressed the button, and the old man inside just grinned: 'I heard your footsteps coming.'"
 
 ## Run it
 
